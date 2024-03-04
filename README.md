@@ -1,2 +1,2 @@
-# telegram-dnevnik-spb
-Telegram bot for getting grades
+# Телеграм бот для получения оценок СПБ
+
