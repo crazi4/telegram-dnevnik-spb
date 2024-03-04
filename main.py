@@ -99,9 +99,6 @@ def handle_text(message):
 def checkValid(call):
     global email
     global password
-    #arg_parser = argparse.ArgumentParser()
-    #arg_parser.add_argument('cookies_path')
-    #args = arg_parser.parse_args()
 
     f = open(str(call.from_user.id) + ".txt", 'r')
     lines = f.readlines()
@@ -112,8 +109,6 @@ def checkValid(call):
 
     cookies_path = Path(str(call.from_user.id) + ".json").expanduser()
 
-    #email = input(f'Email for {dnevnik2.BASE_URL}: ')
-    #password = input()#getpass.getpass()
     try:
         dnevnik = dnevnik2.Dnevnik2.make_from_login_by_email(email, password)
         dnevnik.save_cookies(cookies_path)
@@ -156,12 +151,10 @@ def getMarks(call):
     default_config_path = Path(pkg_resources.resource_filename('dnevnik2', 'app_config.toml')).resolve()
     default_output_dir = Path('.').resolve()
     arg_parser = argparse.ArgumentParser()
-    #arg_parser.add_argument('cookies_path', type=Path)
     arg_parser.add_argument('--config_path', type=Path, default=default_config_path)
     arg_parser.add_argument('--output_dir', type=Path, default=default_output_dir)
     args = arg_parser.parse_args()
 
-    #cookies_path: Path = (str(call.from_user.id) + ".json")
     cookies_path = Path(str(call.from_user.id) + ".json").expanduser()
     config_path: Path = args.config_path
     base_dir: Path = args.output_dir
@@ -172,10 +165,6 @@ def getMarks(call):
     dnevnik = Dnevnik2.make_from_cookies_file(cookies_path)
 
     data = dnevnik.fetch_marks_for_current_quarter()
-
-    #with (base_dir / 'last_res.txt').open('w', encoding='utf-8') as f1:
-    #    print(json.dumps(data, ensure_ascii=False, indent=2), file=f1)
-
     out_lines = []
     grouped = defaultdict(list)
     for item in sorted(data['data']['items'], key=lambda x: (to_date(x['date']), x['estimate_value_name'])):
@@ -195,10 +184,6 @@ def getMarks(call):
         exit(1)
 
     with (base_dir / f'marks.{call.from_user.id}.txt').open('a', encoding='utf-8') as f1:
-        #for date, mark, comment in sorted(out_lines):
-        #    print(f'{date}  {mark} {comment}', file=f1)
-
-        #f1.write('\n\n')
         for s_name in sorted(grouped):
             avg = sum(grouped[s_name]) / len(grouped[s_name])
             s_marks = ', '.join(str(mark) for mark in grouped[s_name])
